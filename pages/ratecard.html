@@ -1,0 +1,105 @@
+<div class="page">
+
+    <!-- HEADER + ACTIONS (LIKE DESIGN) -->
+    <div class="dashboard-section" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+        <div>
+            <h3 class="dashboard-section-title" style="margin:0 0 4px;">Rate Card Management</h3>
+            <p style="font-size:13px; color:#6b7280; margin:0;">
+                Manage pricing for each company
+            </p>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+            <button class="btn btn-outline btn-sm" id="rateExportPdfBtn">
+                <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle; margin-right:4px;">picture_as_pdf</span>
+                Export Rate Card PDF
+            </button>
+            <button class="btn btn-black" id="openRateModal">
+                <span class="material-symbols-outlined" style="vertical-align:middle; font-size:18px;">add</span>
+                Add New Rate Card
+            </button>
+        </div>
+    </div>
+
+    <!-- TABLE CARD (LIKE SCREENSHOT) -->
+    <div class="table-responsive" style="padding:0; box-shadow:var(--shadow-sm); border-radius:12px; overflow:hidden;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Base Rate</th>
+                    <th>Per Article Rate</th>
+                    <th>Parcel Type Extra</th>
+                    <th>Zone/City Rate</th>
+                    <th>Last Updated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="rateCardTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ADD / EDIT RATE CARD MODAL (LIKE DESIGN) -->
+<div class="modal-overlay" id="rateModal">
+    <div class="modal" style="max-width:640px;">
+        <div class="modal-header">
+            <div class="modal-title" id="rateModalTitle">Add New Rate Card</div>
+            <button class="close-btn" id="closeRateModal">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label>Company Name *</label>
+            <input type="text" id="rCompany" class="form-input" placeholder="Enter company name">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Base Rate *</label>
+                <div style="position:relative;">
+                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:13px; color:#6b7280;">₹</span>
+                    <input type="number" id="rBase" class="form-input" style="padding-left:24px;" placeholder="Base rate">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Per Article Price *</label>
+                <div style="position:relative;">
+                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:13px; color:#6b7280;">₹</span>
+                    <input type="number" id="rPerArticle" class="form-input" style="padding-left:24px;" placeholder="Per article">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Parcel Type Price *</label>
+                <div style="position:relative;">
+                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:13px; color:#6b7280;">₹</span>
+                    <input type="number" id="rTypePrice" class="form-input" style="padding-left:24px;" placeholder="Extra for fragile/heavy">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>City/Zone Modifier *</label>
+                <div style="position:relative;">
+                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:13px; color:#6b7280;">₹</span>
+                    <input type="number" id="rZonePrice" class="form-input" style="padding-left:24px;" placeholder="City / Zone extra">
+                </div>
+            </div>
+        </div>
+
+        <!-- INFO BOX LIKE IN SCREENSHOT -->
+        <div style="margin-top:8px; padding:10px 12px; border-radius:10px; background:#f9fafb; border:1px solid #e5e7eb; font-size:12px; color:#4b5563;">
+            <div style="font-weight:600; margin-bottom:4px;">Rate Calculation Formula</div>
+            Total = Base Rate + (Articles × Per Article Rate) + Parcel Type Extra + Zone/City Rate
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancelRateModal">Cancel</button>
+            <button class="btn btn-black" id="saveRateCard">Save Changes</button>
+        </div>
+    </div>
+</div>

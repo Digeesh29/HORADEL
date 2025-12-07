@@ -1,0 +1,111 @@
+<div class="page">
+
+    <!-- FILTERS -->
+    <div class="filter-row" style="margin-bottom:16px;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="font-size:11px; color:#6b7280;">Date From</label>
+            <input type="date" id="repFrom" class="filter-input" value="2024-01-01">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="font-size:11px; color:#6b7280;">Date To</label>
+            <input type="date" id="repTo" class="filter-input" value="2024-12-01">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px; flex:1;">
+            <label style="font-size:11px; color:#6b7280;">Company</label>
+            <select id="reportCompany" class="filter-input">
+                <option value="All">All Companies</option>
+                <option value="TechCorp">TechCorp</option>
+                <option value="GlobalTrade">GlobalTrade</option>
+                <option value="FastShip">FastShip</option>
+                <option value="QuickMove">QuickMove</option>
+                <option value="EasyLogistics">EasyLogistics</option>
+            </select>
+        </div>
+        <div style="display:flex; align-items:flex-end; gap:8px;">
+            <button class="btn btn-black" id="repGenerateBtn">Generate Report</button>
+            <button class="btn btn-outline btn-sm" id="repResetBtn">Reset</button>
+        </div>
+    </div>
+
+    <!-- EXPORT BUTTONS -->
+    <div class="mb-24" style="display:flex; gap:12px;">
+        <button class="btn btn-outline btn-sm" id="repExportPdfBtn">
+            <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">picture_as_pdf</span>
+            Export PDF
+        </button>
+        <button class="btn btn-outline btn-sm" id="repExportCsvBtn">
+            <span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle;">table_view</span>
+            Export CSV
+        </button>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="dashboard-cards">
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">Total Revenue</div>
+            <div class="dashboard-card-value" id="repRevenue">₹0</div>
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">Total Bookings</div>
+            <div class="dashboard-card-value" id="repBookings">0</div>
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">Total Dispatches</div>
+            <div class="dashboard-card-value" id="repDispatches">0</div>
+        </div>
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">Avg Revenue/Booking</div>
+            <div class="dashboard-card-value" id="repAvg">₹0</div>
+        </div>
+    </div>
+
+    <!-- TOP CHARTS -->
+    <div class="chart-row">
+        <div class="chart-placeholder">
+            <h3 class="dashboard-section-title">Revenue Trend (6 Months)</h3>
+            <div style="height:240px;"><canvas id="repRevenueChart"></canvas></div>
+        </div>
+        <div class="chart-placeholder">
+            <h3 class="dashboard-section-title">Parcel Type Distribution</h3>
+            <div style="height:240px;"><canvas id="repPieChart"></canvas></div>
+        </div>
+    </div>
+
+    <!-- COMPANY SUMMARY -->
+    <div class="table-responsive mb-32">
+        <h3 class="dashboard-section-title">Company-wise Summary</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Total Revenue</th>
+                    <th>Total Bookings</th>
+                    <th>Avg per Booking</th>
+                </tr>
+            </thead>
+            <tbody id="repCompanyBody"></tbody>
+        </table>
+    </div>
+
+    <!-- PARCEL TYPE SUMMARY -->
+    <div class="table-responsive mb-32">
+        <h3 class="dashboard-section-title">Parcel Type Summary</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parcel Type</th>
+                    <th>Total Count</th>
+                    <th>Percentage</th>
+                    <th>Distribution</th>
+                </tr>
+            </thead>
+            <tbody id="repParcelBody"></tbody>
+        </table>
+    </div>
+
+    <!-- VEHICLE CHART -->
+    <div class="chart-placeholder chart-full">
+        <h3 class="dashboard-section-title">Vehicle Dispatch Report</h3>
+        <div style="height:220px;"><canvas id="repBarChart"></canvas></div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+<div class="page">
+
+    <!-- STATS CARDS -->
+    <div class="dashboard-cards stats-row">
+        <div class="dashboard-card stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                </div>
+                <span class="stat-change stat-up">+12%</span>
+            </div>
+            <div class="stat-label">Total Bookings Today</div>
+            <div class="stat-value" id="dashBookings">0</div>
+        </div>
+
+        <div class="dashboard-card stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">work</span>
+                </div>
+                <span class="stat-change stat-up">+8%</span>
+            </div>
+            <div class="stat-label">Total Batches Received</div>
+            <div class="stat-value" id="dashBatches">0</div>
+        </div>
+
+        <div class="dashboard-card stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">local_shipping</span>
+                </div>
+                <span class="stat-change stat-up">+5%</span>
+            </div>
+            <div class="stat-label">Vehicles Dispatched</div>
+            <div class="stat-value" id="dashDispatched">0</div>
+        </div>
+
+        <div class="dashboard-card stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">schedule</span>
+                </div>
+                <span class="stat-change stat-down">-5%</span>
+            </div>
+            <div class="stat-label">Pending Deliveries</div>
+            <div class="stat-value" id="dashPending">0</div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="chart-row">
+        <div class="chart-card">
+            <div class="chart-card-title">Bookings Trend</div>
+            <div class="chart-card-body">
+                <canvas id="dashTrendChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-card-title">Company-wise Load Distribution</div>
+            <div class="chart-card-body">
+                <canvas id="dashLoadChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- LATEST BOOKINGS TABLE -->
+    <div class="table-responsive table-card">
+        <div class="table-card-header">
+            <h3 class="dashboard-section-title" style="margin:0;">Latest 10 Bookings</h3>
+            <button class="btn btn-outline btn-sm" id="viewAllBookingsBtn">View All</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>LR No.</th>
+                    <th>Company</th>
+                    <th>Consignee</th>
+                    <th>Destination</th>
+                    <th>Articles</th>
+                    <th>Vehicle</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="dashTableBody"></tbody>
+        </table>
+    </div>
+</div>

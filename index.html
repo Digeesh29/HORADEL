@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ligimed transport Admin</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-circle">HD</div>
+            <div>
+                <div class="brand-title">HoraDel Admin</div>
+                <div class="brand-sub">Transport Control Panel</div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-page="dashboard">
+                <span class="material-symbols-outlined">grid_view</span> Dashboard
+            </button>
+            <button class="nav-item" data-page="bookings">
+                <span class="material-symbols-outlined">receipt_long</span> All Bookings
+            </button>
+            <button class="nav-item" data-page="vehicles">
+                <span class="material-symbols-outlined">local_shipping</span> Vehicles
+            </button>
+            <button class="nav-item" data-page="ratecard">
+                <span class="material-symbols-outlined">payments</span> Rate Card
+            </button>
+            <button class="nav-item" data-page="reports">
+                <span class="material-symbols-outlined">bar_chart</span> Reports
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            &copy; 2024 HoraDel<br>Transport V1.0.2
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header class="topbar">
+            <h2 class="page-title" id="pageTitle">Dashboard</h2>
+            <div class="user-profile">
+                <div class="icon-btn"><span class="material-symbols-outlined">notifications</span></div>
+                <div class="avatar">AD</div>
+                <span>Admin</span>
+            </div>
+        </header>
+
+        <!-- Dynamic page content will be injected here -->
+        <div id="content" style="padding:32px; height:100%; overflow-y:auto;"></div>
+    </main>
+</div>
+
+<!-- MAIN + PAGE JS -->
+<script src="js/main.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/bookings.js"></script>
+<script src="js/vehicles.js"></script>
+<script src="js/ratecard.js"></script>
+<script src="js/reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<div class="page">
+    <div class="filter-row">
+        <input type="date" class="filter-input">
+        <input type="date" class="filter-input">
+        <select id="bookingsCompany" class="filter-input">
+            <option value="All">All Companies</option>
+        </select>
+        <select id="bookingsStatus" class="filter-input">
+            <option value="All">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Assigned">Assigned</option>
+            <option value="Dispatched">Dispatched</option>
+        </select>
+        <input id="bookingSearch" type="text" placeholder="Search LR No..." class="filter-input" style="flex:1;">
+        <button id="bookingsFilterBtn" class="btn btn-black">Apply Filters</button>
+    </div>
+
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>LR No.</th>
+                    <th>Date</th>
+                    <th>Company</th>
+                    <th>Consignee</th>
+                    <th>Destination</th>
+                    <th>Articles</th>
+                    <th>Type</th>
+                    <th>Vehicle</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bookingsTableBody"></tbody>
+        </table>
+    </div>
+</div>
