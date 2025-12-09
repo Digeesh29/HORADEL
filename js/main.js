@@ -15,14 +15,6 @@ const vehicles = [
     { no: "DL-07-IJ-7890", driver: "Manoj Singh",  contact: "9876543214", capacity: "4 Tons", status: "Pending"    }
 ];
 
-const rateCards = [
-    { company: "TechCorp",      base: 500, perArticle: 10, parcelType: 50, zoneRate: 100, updated: "2024-12-01" },
-    { company: "GlobalTrade",   base: 450, perArticle: 12, parcelType: 40, zoneRate: 90,  updated: "2024-11-28" },
-    { company: "FastShip",      base: 600, perArticle: 15, parcelType: 60, zoneRate: 120, updated: "2024-12-02" },
-    { company: "QuickMove",     base: 550, perArticle: 11, parcelType: 45, zoneRate: 110, updated: "2024-11-30" },
-    { company: "EasyLogistics", base: 480, perArticle: 10, parcelType: 40, zoneRate: 95,  updated: "2024-12-03" }
-];
-
 let activeLr = null;
 
 // Simple toast
@@ -111,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (page === "vehicles") initVehiclesPage();
                 if (page === "ratecard") initRateCardPage();
                 if (page === "reports") initReportsPage();
+                if (page === "profile") initProfilePage();
             });
     }
 
@@ -129,6 +122,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Load default page
+    // Click handler for user profile (Admin button)
+    const userAvatar = document.getElementById("userAvatar");
+    const userName = document.getElementById("userName");
+    
+    if (userAvatar) {
+        userAvatar.addEventListener("click", () => {
+            // Trigger profile page load
+            document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+            const profileBtn = document.querySelector('[data-page="profile"]');
+            if (profileBtn) profileBtn.classList.add("active");
+            
+            loadPage("profile");
+            document.getElementById("pageTitle").innerText = "Profile";
+        });
+    }
+    
+    if (userName) {
+        userName.addEventListener("click", () => {
+            // Trigger profile page load
+            document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+            const profileBtn = document.querySelector('[data-page="profile"]');
+            if (profileBtn) profileBtn.classList.add("active");
+            
+            loadPage("profile");
+            document.getElementById("pageTitle").innerText = "Profile";
+        });
+    }
+
+    // Load default page (dashboard)
+    console.log('📊 Loading dashboard...');
     loadPage("dashboard");
 });

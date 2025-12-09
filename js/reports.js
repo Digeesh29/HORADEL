@@ -1,297 +1,298 @@
-// REPORTS PAGE LOGIC
+// Reports Page JavaScript
 
-// Sample data (same style as dashboard)
-const repBookings = [
-    { lr: "LR-2024-001", date: "2024-01-15", company: "TechCorp",      type: "Standard", parcelType: "Standard", articles: 25, status: "Dispatched", revenue: 520 },
-    { lr: "LR-2024-002", date: "2024-01-18", company: "GlobalTrade",   type: "Express",  parcelType: "Express",  articles: 35, status: "Dispatched", revenue: 650 },
-    { lr: "LR-2024-003", date: "2024-02-03", company: "FastShip",      type: "Standard", parcelType: "Heavy",    articles: 28, status: "Verified",   revenue: 730 },
-    { lr: "LR-2024-004", date: "2024-03-10", company: "QuickMove",     type: "Standard", parcelType: "Standard", articles: 22, status: "Submitted",  revenue: 480 },
-    { lr: "LR-2024-005", date: "2024-03-22", company: "EasyLogistics", type: "Express",  parcelType: "Fragile",  articles: 18, status: "Dispatched", revenue: 540 },
-    // add more to better see charts
-    { lr: "LR-2024-006", date: "2024-04-05", company: "TechCorp",      type: "Express",  parcelType: "Standard", articles: 30, status: "Dispatched", revenue: 780 },
-    { lr: "LR-2024-007", date: "2024-04-18", company: "GlobalTrade",   type: "Standard", parcelType: "Heavy",    articles: 20, status: "Verified",   revenue: 620 },
-    { lr: "LR-2024-008", date: "2024-05-02", company: "FastShip",      type: "Express",  parcelType: "Express",  articles: 26, status: "Dispatched", revenue: 810 },
-    { lr: "LR-2024-009", date: "2024-05-19", company: "QuickMove",     type: "Standard", parcelType: "Fragile",  articles: 24, status: "Dispatched", revenue: 560 },
-    { lr: "LR-2024-010", date: "2024-06-01", company: "EasyLogistics", type: "Standard", parcelType: "Standard", articles: 21, status: "Dispatched", revenue: 510 },
-];
+let revenueChart, pieChart, barChart;
 
-const repVehicles = [
-    { no: "MH-12-AB-1234", status: "Dispatched" },
-    { no: "MH-14-CD-5678", status: "Dispatched" },
-    { no: "TN-09-EF-9012", status: "Dispatched" },
-    { no: "KA-05-GH-3456", status: "Pending" },
-    { no: "DL-07-IJ-7890", status: "Pending" }
-];
+async function initReportsPage() {
+    console.log('📊 Initializing Reports page...');
+    
+    // Set default dates - use wide range to capture all data
+    const today = new Date();
+    today.setFullYear(today.getFullYear() + 1); // Include future dates
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    
+    document.getElementById('repFrom').value = oneYearAgo.toISOString().split('T')[0];
+    document.getElementById('repTo').value = today.toISOString().split('T')[0];
+    
+    // Load companies for filter
+    await loadCompaniesFilter();
+    
+    // Generate initial report
+    await generateReport();
+    
+    // Event listeners
+    document.getElementById('repGenerateBtn').addEventListener('click', generateReport);
+    document.getElementById('repResetBtn').addEventListener('click', resetFilters);
+    document.getElementById('repExportPdfBtn').addEventListener('click', exportPDF);
+    document.getElementById('repExportCsvBtn').addEventListener('click', exportCSV);
+}
 
-let repRevenueChartInstance   = null;
-let repPieChartInstance       = null;
-let repBarChartInstance       = null;
-
-document.addEventListener("DOMContentLoaded", () => {
-    // Only run on reports page
-    if (!document.getElementById("repRevenue")) return;
-
-    initReportsPage();
-});
-
-function toastRep(message, type = "success") {
-    if (typeof showToast === "function") {
-        showToast(message, type, 2200);
-    } else {
-        console.log(message);
+async function loadCompaniesFilter() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/companies`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const select = document.getElementById('reportCompany');
+            select.innerHTML = '<option value="All">All Companies</option>';
+            
+            result.data.forEach(company => {
+                const option = document.createElement('option');
+                option.value = company.id;
+                option.textContent = company.name;
+                select.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading companies:', error);
     }
 }
 
-function initReportsPage() {
-    wireReportEvents();
-    generateReport();  // initial
+async function generateReport() {
+    const dateFrom = document.getElementById('repFrom').value;
+    const dateTo = document.getElementById('repTo').value;
+    const companyId = document.getElementById('reportCompany').value;
+    
+    const params = new URLSearchParams({ dateFrom, dateTo, companyId });
+    
+    try {
+        // Load all report data
+        await Promise.all([
+            loadSummary(params),
+            loadRevenueTrend(params),
+            loadCompanySummary(params),
+            loadParcelTypeDistribution(params),
+            loadVehicleDispatch(params)
+        ]);
+    } catch (error) {
+        console.error('Error generating report:', error);
+    }
 }
 
-/* -------- events -------- */
-
-function wireReportEvents() {
-    const genBtn   = document.getElementById("repGenerateBtn");
-    const resetBtn = document.getElementById("repResetBtn");
-    const pdfBtn   = document.getElementById("repExportPdfBtn");
-    const csvBtn   = document.getElementById("repExportCsvBtn");
-    const companySelect = document.getElementById("reportCompany");
-
-    if (genBtn)   genBtn.addEventListener("click", generateReport);
-    if (resetBtn) resetBtn.addEventListener("click", () => {
-        document.getElementById("repFrom").value = "2024-01-01";
-        document.getElementById("repTo").value   = "2024-12-01";
-        companySelect.value = "All";
-        generateReport();
-    });
-    if (companySelect) companySelect.addEventListener("change", generateReport);
-
-    if (pdfBtn) pdfBtn.addEventListener("click", () => {
-        toastRep("📄 Opening print dialog…", "info");
-        setTimeout(() => window.print(), 300);
-    });
-
-    if (csvBtn) csvBtn.addEventListener("click", exportReportCSV);
+async function loadSummary(params) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/reports/summary?${params}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const data = result.data;
+            document.getElementById('repRevenue').textContent = `₹${parseFloat(data.totalRevenue).toLocaleString('en-IN')}`;
+            document.getElementById('repBookings').textContent = data.totalBookings;
+            document.getElementById('repDispatches').textContent = data.totalDispatches;
+            document.getElementById('repAvg').textContent = `₹${parseFloat(data.avgRevenuePerBooking).toLocaleString('en-IN')}`;
+        }
+    } catch (error) {
+        console.error('Error loading summary:', error);
+    }
 }
 
-/* -------- main reporting logic -------- */
-
-function generateReport() {
-    const from = document.getElementById("repFrom").value || "2024-01-01";
-    const to   = document.getElementById("repTo").value   || "2024-12-31";
-    const company = document.getElementById("reportCompany").value || "All";
-
-    const fromDate = new Date(from);
-    const toDate   = new Date(to);
-
-    const filtered = repBookings.filter(b => {
-        const d = new Date(b.date);
-        const inRange = d >= fromDate && d <= toDate;
-        const compOk  = company === "All" || b.company === company;
-        return inRange && compOk;
-    });
-
-    renderKpis(filtered);
-    renderCompanySummary(filtered);
-    renderParcelSummary(filtered);
-    renderCharts(filtered);
-}
-
-function renderKpis(data) {
-    const totalRevenue = data.reduce((sum, b) => sum + (b.revenue || 0), 0);
-    const totalBookings = data.length;
-    const totalDispatches = repVehicles.filter(v => v.status === "Dispatched").length;
-    const avgRevenue = totalBookings ? Math.round(totalRevenue / totalBookings) : 0;
-
-    document.getElementById("repRevenue").innerText    = `₹${totalRevenue.toLocaleString()}`;
-    document.getElementById("repBookings").innerText   = totalBookings;
-    document.getElementById("repDispatches").innerText = totalDispatches;
-    document.getElementById("repAvg").innerText        = `₹${avgRevenue}`;
-}
-
-/* -------- tables -------- */
-
-function renderCompanySummary(data) {
-    const tbody = document.getElementById("repCompanyBody");
-    if (!tbody) return;
-
-    const groups = {};
-    data.forEach(b => {
-        if (!groups[b.company]) groups[b.company] = { rev: 0, count: 0 };
-        groups[b.company].rev   += b.revenue || 0;
-        groups[b.company].count += 1;
-    });
-
-    const rows = Object.keys(groups).map(name => {
-        const g = groups[name];
-        const avg = g.count ? Math.round(g.rev / g.count) : 0;
-        return `
-            <tr>
-                <td style="font-weight:500;">${name}</td>
-                <td>₹${g.rev.toLocaleString()}</td>
-                <td>${g.count}</td>
-                <td>₹${avg}</td>
-            </tr>
-        `;
-    });
-
-    tbody.innerHTML = rows.join("") || `
-        <tr><td colspan="4" style="text-align:center; color:#9ca3af; font-size:13px;">No data in this range.</td></tr>
-    `;
-}
-
-function renderParcelSummary(data) {
-    const tbody = document.getElementById("repParcelBody");
-    if (!tbody) return;
-
-    const counts = {};
-    data.forEach(b => {
-        const t = b.parcelType || "Standard";
-        counts[t] = (counts[t] || 0) + 1;
-    });
-
-    const total = Object.values(counts).reduce((a, b) => a + b, 0);
-
-    const rows = Object.keys(counts).map(type => {
-        const count = counts[type];
-        const pct = total ? Math.round((count / total) * 100) : 0;
-        return `
-            <tr>
-                <td style="font-weight:500;">${type}</td>
-                <td>${count}</td>
-                <td>${pct}%</td>
-                <td>
-                    <div style="height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden;">
-                        <div style="height:6px; width:${pct}%; background:#2563eb;"></div>
-                    </div>
-                </td>
-            </tr>
-        `;
-    });
-
-    tbody.innerHTML = rows.join("") || `
-        <tr><td colspan="4" style="text-align:center; color:#9ca3af; font-size:13px;">No parcel data.</td></tr>
-    `;
-}
-
-/* -------- charts -------- */
-
-function renderCharts(data) {
-    // Revenue trend by month (Jan–Jun)
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-    const monthTotals = [0,0,0,0,0,0];
-    data.forEach(b => {
-        const m = new Date(b.date).getMonth();  // 0–11
-        if (m >= 0 && m <= 5) monthTotals[m] += b.revenue || 0;
-    });
-
-    const revenueCtx = document.getElementById("repRevenueChart");
-    if (revenueCtx) {
-        if (repRevenueChartInstance) repRevenueChartInstance.destroy();
-        repRevenueChartInstance = new Chart(revenueCtx, {
-            type: "line",
-            data: {
-                labels: months,
-                datasets: [{
-                    label: "Revenue",
-                    data: monthTotals,
-                    borderColor: "#2563eb",
-                    backgroundColor: "rgba(37, 99, 235, 0.15)",
-                    tension: 0.35,
-                    fill: true,
-                    pointRadius: 3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
-                    x: { grid: { display: false } }
+async function loadRevenueTrend(params) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/reports/revenue-trend?${params}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const data = result.data;
+            
+            // Destroy existing chart
+            if (revenueChart) {
+                revenueChart.destroy();
+            }
+            
+            // Create new chart
+            const ctx = document.getElementById('repRevenueChart').getContext('2d');
+            revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.month),
+                    datasets: [{
+                        label: 'Revenue',
+                        data: data.map(d => parseFloat(d.revenue)),
+                        borderColor: '#111827',
+                        backgroundColor: 'rgba(17, 24, 39, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => '₹' + value.toLocaleString('en-IN')
+                            }
+                        }
+                    }
                 }
-            }
-        });
-    }
-
-    // Parcel type pie
-    const counts = {};
-    data.forEach(b => {
-        const t = b.parcelType || "Standard";
-        counts[t] = (counts[t] || 0) + 1;
-    });
-
-    const types = Object.keys(counts);
-    const values = Object.values(counts);
-
-    const pieCtx = document.getElementById("repPieChart");
-    if (pieCtx) {
-        if (repPieChartInstance) repPieChartInstance.destroy();
-        repPieChartInstance = new Chart(pieCtx, {
-            type: "doughnut",
-            data: {
-                labels: types,
-                datasets: [{
-                    data: values,
-                    backgroundColor: ["#2563eb", "#10b981", "#f97316", "#facc15"],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: "65%",
-                plugins: { legend: { position: "bottom" } }
-            }
-        });
-    }
-
-    // Vehicle dispatch bar (Mon–Sun – static example)
-    const barCtx = document.getElementById("repBarChart");
-    if (barCtx) {
-        if (repBarChartInstance) repBarChartInstance.destroy();
-        repBarChartInstance = new Chart(barCtx, {
-            type: "bar",
-            data: {
-                labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-                datasets: [{
-                    label: "Dispatches",
-                    data: [12,15,11,18,14,9,10],
-                    backgroundColor: "#2563eb",
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, grid: { display: false } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
+            });
+        }
+    } catch (error) {
+        console.error('Error loading revenue trend:', error);
     }
 }
 
-/* -------- CSV export -------- */
-
-function exportReportCSV() {
-    if (!repBookings.length) {
-        alert("No data to export.");
-        return;
+async function loadCompanySummary(params) {
+    try {
+        console.log('📊 Loading company summary...');
+        const response = await fetch(`${API_BASE_URL}/reports/company-summary?${params}`);
+        const result = await response.json();
+        
+        console.log('Company summary result:', result);
+        
+        if (result.success) {
+            const tbody = document.getElementById('repCompanyBody');
+            
+            if (!tbody) {
+                console.error('❌ repCompanyBody element not found!');
+                return;
+            }
+            
+            if (result.data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#9ca3af;">No data available</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = result.data.map(row => `
+                <tr>
+                    <td>${row.company}</td>
+                    <td>₹${parseFloat(row.totalRevenue).toLocaleString('en-IN')}</td>
+                    <td>${row.totalBookings}</td>
+                    <td>₹${parseFloat(row.avgPerBooking).toLocaleString('en-IN')}</td>
+                </tr>
+            `).join('');
+            
+            console.log('✅ Company summary table updated');
+        }
+    } catch (error) {
+        console.error('❌ Error loading company summary:', error);
     }
+}
 
-    const headers = ["LR No","Date","Company","Type","Parcel Type","Articles","Status","Revenue"];
-    const rows = repBookings.map(b => [
-        b.lr, b.date, b.company, b.type, b.parcelType, b.articles, b.status, b.revenue
-    ]);
+async function loadParcelTypeDistribution(params) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/reports/parcel-type-distribution?${params}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const data = result.data;
+            
+            // Update table
+            const tbody = document.getElementById('repParcelBody');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#9ca3af;">No data available</td></tr>';
+            } else {
+                tbody.innerHTML = data.map(row => `
+                    <tr>
+                        <td>${row.type}</td>
+                        <td>${row.count}</td>
+                        <td>${row.percentage}%</td>
+                        <td>
+                            <div style="background:#e5e7eb; height:8px; border-radius:4px; overflow:hidden;">
+                                <div style="background:#111827; height:100%; width:${row.percentage}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            // Update pie chart
+            if (pieChart) {
+                pieChart.destroy();
+            }
+            
+            const ctx = document.getElementById('repPieChart').getContext('2d');
+            pieChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.map(d => d.type),
+                    datasets: [{
+                        data: data.map(d => d.count),
+                        backgroundColor: ['#111827', '#6b7280', '#9ca3af', '#d1d5db']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error loading parcel type distribution:', error);
+    }
+}
 
-    const csvLines = [headers.join(","), ...rows.map(r => r.join(","))];
-    const csvContent = "data:text/csv;charset=utf-8," + csvLines.join("\n");
-    const link = document.createElement("a");
-    link.href = encodeURI(csvContent);
-    link.download = "horaDel_report.csv";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+async function loadVehicleDispatch(params) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/reports/vehicle-dispatch?${params}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            const data = result.data;
+            
+            if (barChart) {
+                barChart.destroy();
+            }
+            
+            const ctx = document.getElementById('repBarChart').getContext('2d');
+            barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => d.vehicle),
+                    datasets: [{
+                        label: 'Dispatches',
+                        data: data.map(d => d.count),
+                        backgroundColor: '#111827'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error loading vehicle dispatch:', error);
+    }
+}
+
+function resetFilters() {
+    const today = new Date();
+    today.setFullYear(today.getFullYear() + 1); // Include future dates
+    const oneYearAgo = new Date();
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    
+    document.getElementById('repFrom').value = oneYearAgo.toISOString().split('T')[0];
+    document.getElementById('repTo').value = today.toISOString().split('T')[0];
+    document.getElementById('reportCompany').value = 'All';
+    
+    generateReport();
+}
+
+function exportPDF() {
+    alert('PDF export functionality will be implemented');
+}
+
+function exportCSV() {
+    alert('CSV export functionality will be implemented');
 }

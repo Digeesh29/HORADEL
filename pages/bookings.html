@@ -1,37 +1,86 @@
 <div class="page">
-    <div class="filter-row">
-        <input type="date" class="filter-input">
-        <input type="date" class="filter-input">
-        <select id="bookingsCompany" class="filter-input">
-            <option value="All">All Companies</option>
-        </select>
-        <select id="bookingsStatus" class="filter-input">
-            <option value="All">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="Assigned">Assigned</option>
-            <option value="Dispatched">Dispatched</option>
-        </select>
-        <input id="bookingSearch" type="text" placeholder="Search LR No..." class="filter-input" style="flex:1;">
-        <button id="bookingsFilterBtn" class="btn btn-black">Apply Filters</button>
+    <!-- FILTERS CARD -->
+    <div class="filters-card">
+        <div class="filters-header">
+            <span class="material-symbols-outlined" style="font-size:20px; vertical-align:middle;">filter_alt</span>
+            <span style="font-weight:600; font-size:15px;">Filters</span>
+        </div>
+        
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label class="filter-label">Date From</label>
+                <input type="date" id="dateFrom" class="filter-input" placeholder="dd-mm-yyyy">
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Date To</label>
+                <input type="date" id="dateTo" class="filter-input" placeholder="dd-mm-yyyy">
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Company</label>
+                <select id="bookingsCompany" class="filter-input">
+                    <option value="All">All Companies</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">City</label>
+                <select id="bookingsCity" class="filter-input">
+                    <option value="All">All Cities</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="filters-grid" style="margin-top:16px;">
+            <div class="filter-group">
+                <label class="filter-label">Status</label>
+                <select id="bookingsStatus" class="filter-input">
+                    <option value="All">All Statuses</option>
+                    <option value="BOOKED">Booked</option>
+                    <option value="IN-TRANSIT">In Transit</option>
+                    <option value="DELIVERED">Delivered</option>
+                </select>
+            </div>
+            
+            <div class="filter-group" style="grid-column: span 2;">
+                <label class="filter-label">Search LR No.</label>
+                <div style="position:relative;">
+                    <span class="material-symbols-outlined" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:18px; color:#9ca3af;">search</span>
+                    <input id="bookingSearch" type="text" placeholder="Search LR..." class="filter-input" style="padding-left:40px;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="filters-actions">
+            <button id="bookingsFilterBtn" class="btn btn-primary">Apply Filters</button>
+            <button id="bookingsResetBtn" class="btn btn-outline">Reset</button>
+        </div>
     </div>
 
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th>LR No.</th>
-                    <th>Date</th>
-                    <th>Company</th>
-                    <th>Consignee</th>
-                    <th>Destination</th>
-                    <th>Articles</th>
-                    <th>Type</th>
-                    <th>Vehicle</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="bookingsTableBody"></tbody>
-        </table>
+    <!-- RESULTS SECTION -->
+    <div class="results-card">
+        <div class="results-header">
+            <h3 class="results-title">All Parcels (<span id="bookingsCount">0</span>)</h3>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="modern-table">
+                <thead>
+                    <tr>
+                        <th>LR No.</th>
+                        <th>Date</th>
+                        <th>Company</th>
+                        <th>Consignee</th>
+                        <th>Destination</th>
+                        <th>Articles</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsTableBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>

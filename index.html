@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ligimed transport Admin</title>
+    <title>HORADELtransport Admin</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
     <!-- CSS -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=6">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -45,6 +45,9 @@
             <button class="nav-item" data-page="reports">
                 <span class="material-symbols-outlined">bar_chart</span> Reports
             </button>
+            <button class="nav-item" data-page="profile">
+                <span class="material-symbols-outlined">person</span> Profile
+            </button>
         </nav>
 
         <div class="sidebar-footer">
@@ -58,8 +61,8 @@
             <h2 class="page-title" id="pageTitle">Dashboard</h2>
             <div class="user-profile">
                 <div class="icon-btn"><span class="material-symbols-outlined">notifications</span></div>
-                <div class="avatar">AD</div>
-                <span>Admin</span>
+                <div class="avatar" id="userAvatar" style="cursor: pointer;">AD</div>
+                <span id="userName" style="cursor: pointer;">Admin</span>
             </div>
         </header>
 
@@ -68,12 +71,29 @@
     </main>
 </div>
 
-<!-- MAIN + PAGE JS -->
+<!-- CONFIG + MAIN + PAGE JS -->
+<script src="js/config.js"></script>
 <script src="js/main.js"></script>
 <script src="js/dashboard.js"></script>
 <script src="js/bookings.js"></script>
-<script src="js/vehicles.js"></script>
-<script src="js/ratecard.js"></script>
+<script src="js/vehicles.js?v=13"></script>
+<script src="js/ratecard.js?v=2"></script>
 <script src="js/reports.js"></script>
+<script src="js/profile.js"></script>
+
+<!-- Auto-load Dashboard on page load -->
+<script>
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 HoraDel Admin Panel Loading...');
+        
+        // Load dashboard page by default
+        const dashboardBtn = document.querySelector('.nav-item[data-page="dashboard"]');
+        if (dashboardBtn) {
+            dashboardBtn.click();
+            console.log('✅ Dashboard loaded');
+        }
+    });
+</script>
 </body>
 </html>

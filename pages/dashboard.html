@@ -7,7 +7,7 @@
                 <div class="stat-icon">
                     <span class="material-symbols-outlined">inventory_2</span>
                 </div>
-                <span class="stat-change stat-up">+12%</span>
+                <span class="stat-change stat-up" id="dashBookingsGrowth">+0%</span>
             </div>
             <div class="stat-label">Total Bookings Today</div>
             <div class="stat-value" id="dashBookings">0</div>
@@ -16,23 +16,23 @@
         <div class="dashboard-card stat-card">
             <div class="stat-top">
                 <div class="stat-icon">
-                    <span class="material-symbols-outlined">work</span>
+                    <span class="material-symbols-outlined">local_shipping</span>
                 </div>
-                <span class="stat-change stat-up">+8%</span>
+                <span class="stat-change stat-up" id="dashActiveVehiclesGrowth">+0%</span>
             </div>
-            <div class="stat-label">Total Batches Received</div>
-            <div class="stat-value" id="dashBatches">0</div>
+            <div class="stat-label">Active Vehicles</div>
+            <div class="stat-value" id="dashActiveVehicles">0</div>
         </div>
 
         <div class="dashboard-card stat-card">
             <div class="stat-top">
                 <div class="stat-icon">
-                    <span class="material-symbols-outlined">local_shipping</span>
+                    <span class="material-symbols-outlined">package_2</span>
                 </div>
-                <span class="stat-change stat-up">+5%</span>
+                <span class="stat-change stat-up" id="dashParcelsGrowth">+0%</span>
             </div>
-            <div class="stat-label">Vehicles Dispatched</div>
-            <div class="stat-value" id="dashDispatched">0</div>
+            <div class="stat-label">Parcels in Transit</div>
+            <div class="stat-value" id="dashParcels">0</div>
         </div>
 
         <div class="dashboard-card stat-card">
@@ -40,7 +40,7 @@
                 <div class="stat-icon">
                     <span class="material-symbols-outlined">schedule</span>
                 </div>
-                <span class="stat-change stat-down">-5%</span>
+                <span class="stat-change stat-up" id="dashPendingGrowth">+0%</span>
             </div>
             <div class="stat-label">Pending Deliveries</div>
             <div class="stat-value" id="dashPending">0</div>
@@ -60,6 +60,34 @@
             <div class="chart-card-title">Company-wise Load Distribution</div>
             <div class="chart-card-body">
                 <canvas id="dashLoadChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODAY'S SHIPMENT OVERVIEW -->
+    <div class="dashboard-card" style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+                <h3 style="margin: 0; font-size: 18px; font-weight: 600; color: #111827;">Today's Shipment Overview</h3>
+                <p style="margin: 4px 0 0 0; font-size: 13px; color: #6b7280;">Real-time status of all shipments processed today</p>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; width: 100%;">
+            <div style="background: #f3f4f6; padding: 40px 32px; border-radius: 16px; display: flex; flex-direction: column; justify-content: center; min-height: 160px;">
+                <div style="font-size: 15px; color: #6b7280; margin-bottom: 16px; font-weight: 500; letter-spacing: 0.3px;">Total Today</div>
+                <div style="font-size: 56px; font-weight: 700; color: #111827; line-height: 1;" id="statusTotal">0</div>
+            </div>
+            <div style="background: #fef3c7; padding: 40px 32px; border-radius: 16px; display: flex; flex-direction: column; justify-content: center; min-height: 160px;">
+                <div style="font-size: 15px; color: #92400e; margin-bottom: 16px; font-weight: 500; letter-spacing: 0.3px;">Booked</div>
+                <div style="font-size: 56px; font-weight: 700; color: #92400e; line-height: 1;" id="statusBooked">0</div>
+            </div>
+            <div style="background: #dbeafe; padding: 40px 32px; border-radius: 16px; display: flex; flex-direction: column; justify-content: center; min-height: 160px;">
+                <div style="font-size: 15px; color: #1e40af; margin-bottom: 16px; font-weight: 500; letter-spacing: 0.3px;">In Transit</div>
+                <div style="font-size: 56px; font-weight: 700; color: #1e40af; line-height: 1;" id="statusInTransit">0</div>
+            </div>
+            <div style="background: #f3e8ff; padding: 40px 32px; border-radius: 16px; display: flex; flex-direction: column; justify-content: center; min-height: 160px;">
+                <div style="font-size: 15px; color: #6b21a8; margin-bottom: 16px; font-weight: 500; letter-spacing: 0.3px;">Delivered</div>
+                <div style="font-size: 56px; font-weight: 700; color: #6b21a8; line-height: 1;" id="statusDelivered">0</div>
             </div>
         </div>
     </div>

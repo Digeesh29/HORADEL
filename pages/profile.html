@@ -1,0 +1,197 @@
+<div class="page">
+    <div class="profile-container">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-header-left">
+                        <div class="profile-avatar-large">
+                            <span class="material-symbols-outlined" style="font-size:48px;">person</span>
+                        </div>
+                        <div class="profile-header-info">
+                            <div class="profile-role-badge">
+                                <span class="material-symbols-outlined" style="font-size:16px;">verified_user</span>
+                                <span id="profileRole">System Administrator</span>
+                            </div>
+                            <p id="profileCompany">ABC Transport Services</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-dark" onclick="editProfile()">
+                        <span class="material-symbols-outlined" style="font-size:16px;">edit</span>
+                        Edit Profile
+                    </button>
+                </div>
+
+                <!-- Profile Grid -->
+                <div class="profile-grid">
+                    <!-- Personal Information -->
+                    <div class="profile-card">
+                        <h3 class="card-title">Personal Information</h3>
+                        
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="fullName" value="Admin User" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">✉️</span>
+                                <input type="email" id="email" value="admin@horadel.com" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">📱</span>
+                                <input type="tel" id="phone" value="+91 9876543210" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Location</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">📍</span>
+                                <input type="text" id="location" value="Mumbai, Maharashtra" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Role & Activity -->
+                    <div class="profile-card">
+                        <h3 class="card-title">Role & Activity</h3>
+                        
+                        <div class="form-group">
+                            <label>Role & Access</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">🛡️</span>
+                                <input type="text" id="role" value="System Administrator" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Member Since</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">📅</span>
+                                <input type="text" id="memberSince" value="January 15, 2023" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Account Activity</label>
+                            <div class="activity-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Total Bookings</span>
+                                    <span class="stat-value" id="totalBookings">1,247</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Vehicles Managed</span>
+                                    <span class="stat-value" id="vehiclesManaged">48</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transport Company Details -->
+                <div class="profile-card full-width">
+                    <div class="card-header-with-icon">
+                        <span class="card-icon">🏢</span>
+                        <div>
+                            <h3 class="card-title">Transport Company Details</h3>
+                            <p class="card-subtitle">This information will appear on all delivery reports and documents</p>
+                        </div>
+                    </div>
+
+                    <div class="company-details-grid">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">🏢</span>
+                                <input type="text" id="companyName" value="ABC Transport Services" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company Phone</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">📞</span>
+                                <input type="tel" id="companyPhone" value="+91 22 1234 5678" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Company Email</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">✉️</span>
+                                <input type="email" id="companyEmail" value="info@abctransport.com" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>GST Number</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">🌐</span>
+                                <input type="text" id="gstNumber" value="27AABCU9603R1ZM" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Transport License Number</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">🛡️</span>
+                                <input type="text" id="transportLicense" value="MH-TR-2023-001234" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Company Address</label>
+                            <div class="input-with-icon">
+                                <span class="input-icon">📍</span>
+                                <input type="text" id="companyAddress" value="Shop No. 15, Transport Nagar, Andheri East, Mumbai - 400069" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-banner">
+                        💡 This company information is used in delivery challans and reports. Make sure it's accurate and up-to-date.
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="profile-card full-width">
+                    <h3 class="card-title">Security Settings</h3>
+
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Password</h4>
+                            <p>Last changed 3 months ago</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm" onclick="changePassword()">Change Password</button>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Two-Factor Authentication</h4>
+                            <p>Add an extra layer of security</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm" onclick="enable2FA()">Enable 2FA</button>
+                    </div>
+
+                    <div class="security-item">
+                        <div class="security-info">
+                            <h4>Active Sessions</h4>
+                            <p>Manage your active sessions</p>
+                        </div>
+                        <button class="btn btn-outline btn-sm" onclick="viewSessions()">View Sessions</button>
+                    </div>
+                </div>
+
+            <!-- Footer -->
+        <div class="profile-footer">
+            <p>Powered by <strong>HoraDel</strong> Transport Management Software v1.0</p>
+        </div>
+    </div>
+</div>
